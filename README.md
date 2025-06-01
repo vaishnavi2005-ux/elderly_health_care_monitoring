@@ -236,8 +236,6 @@ Performance: Sustained message flow every 2 seconds for load testing.
 
 **Future Improvements**
 
-Add a web dashboard for live monitoring
-
 Implement user authentication and data privacy features
 
 Expand sensor types and alert criteria
