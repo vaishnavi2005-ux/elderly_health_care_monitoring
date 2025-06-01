@@ -4,7 +4,6 @@ import time
 from datetime import datetime
 import paho.mqtt.client as mqtt
 
-# MQTT setup
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 60)
 
@@ -19,7 +18,7 @@ def get_patient_id(name):
         next_patient_id += 1
     return name_to_id[name]
 
-# List of possible patient names (you can expand this)
+# List of possible patient names
 all_possible_names = ["Alice", "Bob", "Charlie", "Diana", "Maria", "Ethan", "Grace", "Helen"]
 
 # Generate patient data
@@ -39,7 +38,6 @@ def generate_data():
         "body_temperature": round(random.uniform(36.0, 38.0), 1)
     }
 
-# Publishing loop
 while True:
     data = generate_data()
     mqtt_client.publish("sensor/health", json.dumps(data))
