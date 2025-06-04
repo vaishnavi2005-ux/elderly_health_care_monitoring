@@ -3,10 +3,10 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Connect to MySQL
+
 $conn = new mysqli("localhost", "root", "", "health_care_project");
 
-// Check for connection error
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['username'];
     $pass = $_POST['password'];
 
-    // Prepare and bind
+  
     $stmt = $conn->prepare("SELECT id, password, role, assigned_patient_ids FROM users WHERE email = ?");
     if ($stmt) {
         $stmt->bind_param("s", $user);
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result && $result->num_rows === 1) {
             $row = $result->fetch_assoc();
 
-            // Check password
+
             if (password_verify($pass, $row['password'])) {
                 $_SESSION['id'] = $row['id'];
                 $_SESSION['email'] = $user;
