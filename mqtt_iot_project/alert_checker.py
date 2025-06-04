@@ -5,12 +5,12 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# MongoDB setup
+
 mongo_client = MongoClient("mongodb+srv://vaishnavi2005:vaishnavi@cluster0.ddzlgcu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 mongo_db = mongo_client["elderly_care"]
 mongo_collection = mongo_db["sensor_data"]
 
-# Email settings
+
 EMAIL_ADDRESS = "exampleemail20025"
 EMAIL_PASSWORD = "ejilaqdsmpitlcru"
 EMAIL_RECEIVER = "exampleproject02@gmail.com"
