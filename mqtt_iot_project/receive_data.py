@@ -6,12 +6,12 @@ import sqlite3
 from neo4j import GraphDatabase
 import paho.mqtt.client as mqtt
 
-# MongoDB Setup
+
 mongo_client = MongoClient("mongodb+srv://vaishnavi2005:vaishnavi@cluster0.ddzlgcu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 mongo_db = mongo_client["elderly_care"]
 mongo_collection = mongo_db["sensor_data"]
 
-# SQLite setup
+
 sqlite_conn = sqlite3.connect("elderly_care.db")
 sqlite_cursor = sqlite_conn.cursor()
 sqlite_cursor.execute("DROP TABLE IF EXISTS sensor_data")
@@ -30,7 +30,6 @@ sqlite_cursor.execute('''
 ''')
 sqlite_conn.commit()
 
-# Neo4j Setup
 neo4j_uri = "neo4j+s://8cba7edf.databases.neo4j.io"
 neo4j_user = "neo4j"
 neo4j_password = "xJIgo3J7EAlHLjSGKz4FKTx8oLOFVZpVkQvETTlgxUA"
@@ -61,7 +60,7 @@ def save_to_neo4j(data):
         medication_taken=data["medication_taken"])
 
 
-# MQTT Setup
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code", rc)
     client.subscribe("sensor/health")
@@ -73,7 +72,7 @@ def on_message(client, userdata, msg):
         data["timestamp"] = datetime.strptime(data["timestamp"], "%Y-%m-%d %H:%M:%S")
         mongo_collection.insert_one(data) # MongoDB
 
-       # Save to SQLite
+       
         sqlite_cursor.execute("""
             INSERT INTO sensor_data VALUES (?,?,?,?,?,?,?,?,?)
         """, (
@@ -89,7 +88,7 @@ def on_message(client, userdata, msg):
         ))
         sqlite_conn.commit()
 
-        # Save to Neo4j
+        
         save_to_neo4j(data)
 
         print("Data saved to MongoDB, SQLite, and Neo4j")
