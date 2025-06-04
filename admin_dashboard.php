@@ -30,9 +30,9 @@ $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign'])) {
     $user_id = intval($_POST['user_id']);
-    $patient_id = $_POST['patient_name']; // patient name string
-
-    // Get current assigned_patient_ids for this user
+    $patient_id = $_POST['patient_name'];
+    
+    
     $stmt = $conn->prepare("SELECT assigned_patient_ids FROM users WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign'])) {
         $row = $result->fetch_assoc();
         $current_patients = $row['assigned_patient_ids'];
 
-        // Convert to array, or empty if none
+        
         $patients_array = $current_patients ? explode(",", $current_patients) : [];
 
 
