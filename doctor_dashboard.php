@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-// Simple role check (assuming you have user session management)
+
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'doctor') {
     header("Location: login.php");
     exit();
 }
 
-// Connect to SQLite
+
 try {
     $db = new PDO('sqlite:elderly_care.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -15,7 +15,6 @@ try {
     die("DB Connection failed: " . $e->getMessage());
 }
 
-// Fetch all unique patient names for dropdown
 $patientsQuery = $db->query("SELECT DISTINCT name FROM sensor_data ORDER BY name ASC");
 $patients = $patientsQuery->fetchAll(PDO::FETCH_ASSOC);
 
@@ -23,7 +22,7 @@ $selected_patient = $_GET['patient'] ?? null;
 $patient_stats = [];
 
 if ($selected_patient) {
-    // Prepare statement to avoid SQL injection
+    
     $stmt = $db->prepare("SELECT * FROM sensor_data WHERE name = :name ORDER BY timestamp DESC LIMIT 10");
     $stmt->execute([':name' => $selected_patient]);
     $patient_stats = $stmt->fetchAll(PDO::FETCH_ASSOC);
