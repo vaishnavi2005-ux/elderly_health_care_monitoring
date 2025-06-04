@@ -1,19 +1,19 @@
 <?php
 session_start();
 
-// Allow only admins
+
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
-// Connect to MySQL for users
+
 $conn = new mysqli("localhost", "root", "", "health_care_project");
 if ($conn->connect_error) {
     die("DB Connection failed: " . $conn->connect_error);
 }
 
-// Connect to SQLite to get patients
+
 try {
     $db = new PDO('sqlite:elderly_care.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -21,13 +21,13 @@ try {
     die("SQLite DB Connection failed: " . $e->getMessage());
 }
 
-// Fetch patients from SQLite (using patient names as ID)
+
 $patientsQuery = $db->query("SELECT DISTINCT name FROM sensor_data ORDER BY name ASC");
 $patients = $patientsQuery->fetchAll(PDO::FETCH_ASSOC);
 
 $message = "";
 
-// Handle form submission (POST)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign'])) {
     $user_id = intval($_POST['user_id']);
     $patient_id = $_POST['patient_name']; // patient name string
@@ -45,17 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assign'])) {
         // Convert to array, or empty if none
         $patients_array = $current_patients ? explode(",", $current_patients) : [];
 
-        // Avoid duplicate assignment
+
         if (!in_array($patient_id, $patients_array)) {
             $patients_array[] = $patient_id;
             $new_patients = implode(",", $patients_array);
 
-            // Update assigned_patient_ids field in users table
             $update_stmt = $conn->prepare("UPDATE users SET assigned_patient_ids = ? WHERE id = ?");
             $update_stmt->bind_param("si", $new_patients, $user_id);
             $update_result = $update_stmt->execute();
 
-            // Insert into assignments table
             $insert_stmt = $conn->prepare("INSERT INTO assignments(patient_name, user_id) VALUES (?, ?)");
             if ($insert_stmt === false) {
                 die("Prepare failed: " . $conn->error);
