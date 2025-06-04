@@ -7,7 +7,7 @@ import paho.mqtt.client as mqtt
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 60)
 
-# Dynamic name-to-ID mapping
+
 name_to_id = {}
 next_patient_id = 1
 
@@ -18,10 +18,10 @@ def get_patient_id(name):
         next_patient_id += 1
     return name_to_id[name]
 
-# List of possible patient names
+
 all_possible_names = ["Alice", "Bob", "Charlie", "Diana", "Maria", "Ethan", "Grace", "Helen"]
 
-# Generate patient data
+
 def generate_data():
     name = random.choice(all_possible_names)
     patient_id = get_patient_id(name)
