@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-// Allow only logged-in nurses
+
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'nurse') {
     header("Location: login.php");
     exit();
 }
 
-// Convert CSV patient IDs to array and filter empty
+
 $patient_ids = array_filter(array_map('trim', explode(",", $_SESSION['assigned_patients'] ?? "")));
 
 if (empty($patient_ids)) {
@@ -21,14 +21,13 @@ try {
     die("DB Connection failed: " . $e->getMessage());
 }
 
-// Prepare placeholders
 $placeholders = implode(",", array_fill(0, count($patient_ids), '?'));
 
-// Assuming patient names are unique and stored in 'name' column in sensor_data table
+
 $sql = "SELECT * FROM sensor_data WHERE name IN ($placeholders)";
 $stmt = $db->prepare($sql);
 
-// Bind patient IDs (names) as strings
+
 foreach ($patient_ids as $index => $patient_name) {
     $stmt->bindValue($index + 1, $patient_name, PDO::PARAM_STR);
 }
